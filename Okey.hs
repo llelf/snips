@@ -145,14 +145,12 @@ nextInGroup g@(Set r suits cs)
     | otherwise     = []
 
 nextInGroup (Run _ False _) = []
-nextInGroup g@(Run Up True cs@(Card s r : rest))
+nextInGroup g@(Run dir True cs@(Card s r : rest))
     | length cs < 5 = [ (g', Card s r') ]
     | otherwise     = []
-       where (g',r') = if r==13 then (dontGrowMore g, 1) else (g, r+1)
-nextInGroup g@(Run Down True cs@(Card s r : rest))
-    | length cs < 5 = [ (g', Card s r') ]
-    | otherwise     = []
-       where (g',r') = if r==1 then (g, 13) else (g, r-1)
+       where (g',r') = case dir of
+                         Up   -> if r==13 then (dontGrowMore g, 1) else (g, r+1)
+                         Down -> if r==1 then (g, 13) else (g, r-1)
 
 nextInGroup g@(Pair [c]) = [(g,c)]
 nextInGroup _            = []
